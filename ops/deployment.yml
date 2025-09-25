@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: config-secret-Deployment
+  name: config-secret-deployment
 spec:
   replicas: 1
   selector:
@@ -17,3 +17,18 @@ spec:
           image: ritikaxg/configmaps-secrets:1
           ports:
             - containerPort: 3000
+          env:
+            - name: PORT  
+              valueFrom:
+                configMapKeyRef:
+                  name: config-backend
+                  key: port
+          volumeMounts: # This container has a volume mount # all keys at backend-secret will be mounted as files at mountPath
+            - name: env-file
+              readOnly: true
+              mountPath: "/app/secret" # you can't put "/app" here since it will replace the existing "/app" containing ur app files with "/app" containing only ".env" file so u need to mount .env file in seperate dir
+      volumes: # These volumes will become available to all containers defined here
+        - name: env-file # name of volume
+          secret: # pick from 'backend-secret'
+            secretName: backend-secret 
+      
