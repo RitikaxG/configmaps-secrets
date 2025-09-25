@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-secret-Deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secret
+  template:
+    metadata:
+      labels:
+        app: secret
+    spec:
+      containers:
+        - name: configmaps-secret
+          image: ritikaxg/configmaps-secrets:1
+          ports:
+            - containerPort: 3000
